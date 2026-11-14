@@ -1,0 +1,75 @@
+# ===== Gradle =====
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# ===== Android local / generado =====
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+output.json
+
+# ===== Firma de release (NO subir nunca) =====
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+
+# ===== Kotlin / KSP =====
+*.class
+kspCaches/
+.kotlin/
+
+# ===== Room: esquemas exportados y bases locales de prueba =====
+# Los esquemas en app/schemas/ SÍ conviene versionarlos; no los ignores.
+*.db
+*.db-shm
+*.db-wal
+
+# ===== IntelliJ / Android Studio =====
+*.iml
+.idea/*
+!.idea/codeStyles/
+!.idea/runConfigurations/
+!.idea/inspectionProfiles/
+!.idea/AndroidProjectSystem.xml
+!.idea/gradle.xml
+!.idea/misc.xml
+!.idea/compiler.xml
+!.idea/deploymentTargetSelector.xml
+!.idea/.name
+!.idea/.gitignore
+.idea/workspace.xml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deviceManager.xml
+.idea/deviceStreaming.xml
+.idea/shelf/
+.idea/dictionaries/
+
+# ===== Logs y crashes =====
+*.log
+hs_err_pid*
+replay_pid*
+
+# ===== Sistema operativo y editores =====
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+
+# ===== Datos sensibles de la app =====
+# PDFs de presupuestos y backups exportados con datos de clientes
+*.pdf
+Presupuestos/
+*_backup*.db
