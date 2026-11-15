@@ -1,17 +1,14 @@
 package com.gastonnicora.presupuesto.ui.budget
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
@@ -31,9 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gastonnicora.presupuesto.dao.BudgetSummary
-import com.gastonnicora.presupuesto.model.SalesCondition
 import com.gastonnicora.presupuesto.ui.components.DatePickerSheet
-import com.gastonnicora.presupuesto.ui.components.ItemCard
 import com.gastonnicora.presupuesto.ui.components.SearchBar
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
 import java.time.LocalDate
@@ -68,16 +63,29 @@ fun BudgetScreen(
 
     val from = fromDate
     val to = toDate
-
-    val filtered = budgets.filter { budget ->
-        val date = parseDate(budget.date)
-        val matchesText = budget.clientName.contains(query, ignoreCase = true)
-        val afterFrom = from == null || (date != null && !date.isBefore(from))
-        val beforeTo = to == null || (date != null && !date.isAfter(to))
-        matchesText && afterFrom && beforeTo
+    // Se recalcula solo si cambia la lista de presupuestos
+    val parsed = remember(budgets) {
+        budgets.map { it to parseDate(it.date) }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+// Se recalcula cuando cambia el texto o alguna fecha
+    val filtered = remember(parsed, query, from, to) {
+        parsed
+            .filter { (budget, date) ->
+                val matchesText = budget.clientName.contains(query, ignoreCase = true)
+                val afterFrom = from == null || (date != null && !date.isBefore(from))
+                val beforeTo = to == null || (date != null && !date.isAfter(to))
+                matchesText && afterFrom && beforeTo
+            }
+            .map { (budget, _) -> budget }
+    }
+
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding()
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             SearchBar(
                 query = query,
@@ -141,10 +149,11 @@ fun BudgetScreen(
         }
     }
 
+    val today = remember { LocalDate.now() }
     if (showFromPicker) {
         DatePickerSheet(
             initial = from,
-            maxDate = LocalDate.now(),
+            maxDate = today,
             onConfirm = {
                 fromDate = it
                 showFromPicker = false
@@ -156,7 +165,7 @@ fun BudgetScreen(
     if (showToPicker) {
         DatePickerSheet(
             initial = to,
-            maxDate = LocalDate.now(),
+            maxDate = today,
             onConfirm = {
                 toDate = it
                 showToPicker = false

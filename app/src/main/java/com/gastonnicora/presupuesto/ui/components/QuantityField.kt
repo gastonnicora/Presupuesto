@@ -41,8 +41,9 @@ fun QuantityField(
             .onFocusChanged { if (!it.isFocused) text = quantity.toString() }
     )
 }
+
 @Preview(showSystemUi = false, showBackground = true)
 @Composable
-fun QuantityFieldPreview(){
-    QuantityField(9999,{}, Modifier)
+fun QuantityFieldPreview() {
+    QuantityField(9999, {}, Modifier)
 }

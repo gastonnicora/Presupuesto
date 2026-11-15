@@ -13,7 +13,7 @@ object BackupManager {
 
     // La versión más baja de la que tenés migraciones hasta llegar a la actual
     private const val VERSION_MINIMA_SOPORTADA = 1
-    private const val VERSION_ESQUEMA = 1 // la versión actual de AppDatabase
+    private const val VERSION_ESQUEMA = 2 // la versión actual de AppDatabase
 
     suspend fun exportar(context: Context, destino: Uri): Result<Unit> =
         withContext(Dispatchers.IO) {

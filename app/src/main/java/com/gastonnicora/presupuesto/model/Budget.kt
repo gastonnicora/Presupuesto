@@ -3,6 +3,7 @@ package com.gastonnicora.presupuesto.model
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
+import androidx.room3.Index
 import androidx.room3.PrimaryKey
 
 /** Presupuesto emitido a un cliente. */
@@ -15,7 +16,8 @@ import androidx.room3.PrimaryKey
             childColumns = ["client_id"],
             onDelete = ForeignKey.RESTRICT
         )
-    ]
+    ],
+    indices = [Index("client_id")]
 )
 data class Budget(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
@@ -25,6 +27,7 @@ data class Budget(
     val total: Long
 
 )
+
 /** Presupuesto de ejemplo para las vistas previas. */
 internal fun sampleBudget() = Budget(
     id = 1,

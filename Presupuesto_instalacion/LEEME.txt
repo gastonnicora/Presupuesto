@@ -1,0 +1,6 @@
+Presupuesto - paquete de instalación
+
+1) En Android, descargá Presupuesto.apk.
+2) Abrí el APK y seguí la Guía_de_instalacion.pdf.
+3) Si Android solicita permiso para instalar desde esa fuente, habilitalo solo para esta instalación.
+4) Al terminar, podés desactivar nuevamente ese permiso.

@@ -3,7 +3,7 @@ package com.gastonnicora.presupuesto.storage
 import android.content.Context
 import java.io.File
 
-fun createDirectory(context: Context,path: String): File {
+fun createDirectory(context: Context, path: String): File {
     val carpeta = File(context.getExternalFilesDir(null), "Presupuestos/$path")
     if (!carpeta.exists()) {
         carpeta.mkdirs()
@@ -23,4 +23,4 @@ fun moveDirectory(origen: File, destino: File): Boolean {
 }
 
 
-val PATH="Presupuestos/"
+val PATH = "Presupuestos/"

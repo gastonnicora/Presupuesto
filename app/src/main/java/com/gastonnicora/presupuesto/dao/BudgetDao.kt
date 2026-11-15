@@ -19,6 +19,7 @@ data class BudgetLine(
 ) {
     val subtotalCents: Long get() = unitPriceCents * quantity
 }
+
 /** Presupuesto con el nombre del cliente. Resultado del join, no es una tabla. */
 data class BudgetSummary(
     val budgetId: Int,
@@ -87,15 +88,27 @@ interface BudgetDao {
 
 
     @Transaction
-    suspend fun saveBudget(budget: Budget, lines: List<BudgetLine>, existingId: Int?):Int {
+    suspend fun saveBudget(budget: Budget, lines: List<BudgetLine>, existingId: Int?): Int {
         if (existingId == null) {
             val newId = insertBudget(budget).toInt()
-            insertBudgetItems(lines.map { BudgetItem(budgetId = newId, itemId = it.itemId, quantity = it.quantity) })
+            insertBudgetItems(lines.map {
+                BudgetItem(
+                    budgetId = newId,
+                    itemId = it.itemId,
+                    quantity = it.quantity
+                )
+            })
             return newId
         } else {
             update(budget.copy(id = existingId))
             deleteLines(existingId)
-            insertBudgetItems(lines.map { BudgetItem(budgetId = existingId, itemId = it.itemId, quantity = it.quantity) })
+            insertBudgetItems(lines.map {
+                BudgetItem(
+                    budgetId = existingId,
+                    itemId = it.itemId,
+                    quantity = it.quantity
+                )
+            })
             return existingId
         }
     }

@@ -73,3 +73,7 @@ dependencies {
     implementation(libs.pdfkmp.android)
     implementation(libs.pdfkmp.viewer)
 }
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}

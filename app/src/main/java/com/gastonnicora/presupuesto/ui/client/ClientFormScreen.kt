@@ -1,6 +1,5 @@
 package com.gastonnicora.presupuesto.ui.client
 
-import androidx.collection.intIntMapOf
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,10 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gastonnicora.presupuesto.model.Client
 import com.gastonnicora.presupuesto.model.IvaCategory
-import com.gastonnicora.presupuesto.model.SalesCondition
-import com.gastonnicora.presupuesto.model.isValidCuit
 import com.gastonnicora.presupuesto.model.sampleClient
-import com.gastonnicora.presupuesto.storage.createDirectory
 import com.gastonnicora.presupuesto.ui.components.EnumDropdown
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
 
@@ -89,9 +85,9 @@ fun ClientFormScreen(
             label = { Text("CUIT") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = cuit.length == 11 ,
+            isError = cuit.length == 11,
             supportingText = {
-                if (cuit.length == 11 ) Text("CUIT inválido")
+                if (cuit.length == 11) Text("CUIT inválido")
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -107,18 +103,17 @@ fun ClientFormScreen(
 
         Button(
             onClick = {
-                    onSave(
-                        Client(
-                            id = initial?.id ?: 0,
-                            name = name.trim(),
-                            address = address.trim(),
-                            ivaCategory = ivaCategory ?: IvaCategory.CONSUMIDOR_FINAL,
-                            locality = locality.trim(),
-                            cuit = cuit,
-                            active = initial?.active ?: true
-                        )
+                onSave(
+                    Client(
+                        id = initial?.id ?: 0,
+                        name = name.trim(),
+                        address = address.trim(),
+                        ivaCategory = ivaCategory ?: IvaCategory.CONSUMIDOR_FINAL,
+                        locality = locality.trim(),
+                        cuit = cuit,
+                        active = initial?.active ?: true
                     )
-
+                )
 
 
             },

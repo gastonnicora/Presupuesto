@@ -9,10 +9,10 @@ import androidx.room3.PrimaryKey
 data class Client(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     val name: String,
-    val address: String="-",
-    @ColumnInfo(name = "iva_category") val ivaCategory: IvaCategory= IvaCategory.CONSUMIDOR_FINAL,
-    val locality: String="-",
-    val cuit: String="-",
+    val address: String = "-",
+    @ColumnInfo(name = "iva_category") val ivaCategory: IvaCategory = IvaCategory.CONSUMIDOR_FINAL,
+    val locality: String = "-",
+    val cuit: String = "-",
     val active: Boolean = true
 )
 

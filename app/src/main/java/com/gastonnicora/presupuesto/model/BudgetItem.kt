@@ -3,6 +3,7 @@ package com.gastonnicora.presupuesto.model
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
+import androidx.room3.Index
 
 /** Relación entre un presupuesto y los productos que incluye, con su cantidad. */
 @Entity(
@@ -21,7 +22,8 @@ import androidx.room3.ForeignKey
             childColumns = ["item_id"],
             onDelete = ForeignKey.RESTRICT
         )
-    ]
+    ],
+    indices = [Index("item_id")]
 )
 data class BudgetItem(
     @ColumnInfo(name = "budget_id") val budgetId: Int,

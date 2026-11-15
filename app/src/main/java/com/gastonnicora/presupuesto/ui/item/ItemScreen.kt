@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -37,10 +38,15 @@ fun ItemScreen(
 
     val filtered = items.filter { it.name.contains(query, ignoreCase = true) }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .imePadding()) {
         Column(modifier = Modifier.fillMaxSize()) {
             SearchBar(
-                query, onQueryChange = { query = it }, label = "Buscar producto", modifier = Modifier
+                query,
+                onQueryChange = { query = it },
+                label = "Buscar producto",
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )

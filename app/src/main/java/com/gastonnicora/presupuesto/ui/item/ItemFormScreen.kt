@@ -38,7 +38,10 @@ fun ItemFormScreen(
     var name by remember { mutableStateOf(initial?.name ?: "") }
     // El usuario escribe pesos (ej: "2000,20"), se convierte a centavos al guardar
     var priceText by remember {
-        mutableStateOf(initial?.let { formatPrice(it.unitPriceCents) } ?: "")
+        mutableStateOf(initial?.let {
+            formatPrice(it.unitPriceCents).removePrefix("$")
+                .replace(".", "")
+        } ?: "")
     }
 
     val priceCents = parsePriceToCents(priceText)

@@ -30,9 +30,9 @@ import com.gastonnicora.presupuesto.model.formatPrice
 
 fun generatePDF(
     logo: ByteArray? = null,
-    budget: Budget ,
-    company: CompanyData ,
-    client: Client ,
+    budget: Budget,
+    company: CompanyData,
+    client: Client,
     items: List<BudgetLine>,
 ) = pdf {
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -36,7 +37,9 @@ fun ClientScreen(
 
     val filtered = clients.filter { it.name.contains(query, ignoreCase = true) }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .imePadding()) {
         Column(modifier = Modifier.fillMaxSize()) {
             SearchBar(
                 query, onQueryChange = { query = it }, label = "Buscar cliente", modifier = Modifier
@@ -70,7 +73,12 @@ fun ClientScreen(
 private fun ClientScreenPreview() {
     PresupuestoTheme {
         ClientScreen(
-            clients = List(5) { index -> sampleClient().copy(id = index, name = "Cliente ${index + 1}") },
+            clients = List(5) { index ->
+                sampleClient().copy(
+                    id = index,
+                    name = "Cliente ${index + 1}"
+                )
+            },
             onEdit = {},
             onDelete = {}
         )

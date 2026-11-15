@@ -15,7 +15,6 @@ data class Item(
 )
 
 
-
 /** Ítem de ejemplo para las vistas previas. */
 internal fun sampleItem() = Item(
     id = 1,

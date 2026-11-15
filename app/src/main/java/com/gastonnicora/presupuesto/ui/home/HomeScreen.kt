@@ -1,6 +1,5 @@
 package com.gastonnicora.presupuesto.ui.home
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,10 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.gastonnicora.presupuesto.model.CompanyData
 import com.gastonnicora.presupuesto.model.sampleCompany
-import com.gastonnicora.presupuesto.ui.client.ClientActivity
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
 
 private data class HomeMenuItem(
@@ -41,7 +37,7 @@ fun HomeScreen(
     onOpenClients: () -> Unit,
     onOpenItems: () -> Unit,
     onOpenBudget: () -> Unit,
-    onOpenPDF:()->Unit,
+    onOpenPDF: () -> Unit,
     onExportCopy: () -> Unit,
     onImportCopy: () -> Unit,
     modifier: Modifier = Modifier
@@ -53,9 +49,9 @@ fun HomeScreen(
         HomeMenuItem(Icons.Default.Person, "Clientes", onOpenClients),
         HomeMenuItem(Icons.Default.FormatListNumbered, "Productos", onOpenItems),
         HomeMenuItem(Icons.Default.AddShoppingCart, "Presupuestos", onOpenBudget),
-        HomeMenuItem(Icons.Default.PictureAsPdf, "Presupuestos PDF",onOpenPDF),
-        HomeMenuItem(Icons.Default.Backup, "Exportar Datos",onExportCopy),
-                HomeMenuItem(Icons.Default.Restore, "Importar datos",onImportCopy)
+        HomeMenuItem(Icons.Default.PictureAsPdf, "Presupuestos PDF", onOpenPDF),
+        HomeMenuItem(Icons.Default.Backup, "Exportar Datos", onExportCopy),
+        HomeMenuItem(Icons.Default.Restore, "Importar datos", onImportCopy)
     )
 
     Column(
@@ -91,6 +87,6 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     PresupuestoTheme {
-        HomeScreen(company = sampleCompany(), onEditCompany = {}, {}, {}, {},{},{},{})
+        HomeScreen(company = sampleCompany(), onEditCompany = {}, {}, {}, {}, {}, {}, {})
     }
 }

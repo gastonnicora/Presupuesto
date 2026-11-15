@@ -4,17 +4,17 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.core.graphics.scale
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gastonnicora.presupuesto.model.CompanyData
-import java.io.File
+import com.gastonnicora.presupuesto.model.IvaCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import androidx.core.graphics.scale
-import com.gastonnicora.presupuesto.model.IvaCategory
+import java.io.File
 
 // Mismo nombre que la versión anterior: así no se pierden los datos ya guardados.
 private val Context.companyDataStore by preferencesDataStore(name = "owner_data")

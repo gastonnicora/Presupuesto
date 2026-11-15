@@ -1,17 +1,18 @@
 package com.gastonnicora.presupuesto.ui.budget
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,87 +81,88 @@ fun BudgetFormScreen(
     val total = lines.sumOf { it.subtotalCents }
     val isFormValid = client != null && lines.isNotEmpty()
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .imePadding()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .imePadding()) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
-            SearchableDropdown(
-                label = "Cliente",
-                options = clients,
-                selected = client,
-                optionLabel = { it.name },
-                onSelected = { client = it }
-            )
+            // La lista ocupa el espacio disponible; el pie queda abajo, siempre visible
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    SearchableDropdown(
+                        label = "Cliente",
+                        options = clients,
+                        selected = client,
+                        optionLabel = { it.name },
+                        onSelected = { client = it }
+                    )
+                }
 
-            Text(
-                text = "Fecha: $dateText",
-                style = MaterialTheme.typography.bodyLarge
-            )
+                item {
+                    Text(
+                        text = "Fecha: $dateText",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
 
-            EnumDropdown(
-                label = "Condición de venta",
-                options = SalesCondition.entries,
-                selected = condition,
-                optionLabel = { it.label },
-                onSelected = { condition = it }
-            )
+                item {
+                    EnumDropdown(
+                        label = "Condición de venta",
+                        options = SalesCondition.entries,
+                        selected = condition,
+                        optionLabel = { it.label },
+                        onSelected = { condition = it }
+                    )
+                }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Productos",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
-                )
-                FilledTonalButton(onClick = { showProductSheet = true }) {
-                    Text("Agregar productos")
+                item {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Productos",
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilledTonalButton(onClick = { showProductSheet = true }) {
+                            Text("Agregar productos")
+                        }
+                    }
+                }
+
+                if (lines.isEmpty()) {
+                    item {
+                        Text(
+                            text = "Todavía no agregaste productos",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    items(lines, key = { it.itemId }) { line ->
+                        BudgetLineRow(
+                            line = line,
+                            onQuantityChange = { newQuantity ->
+                                lines = lines.map {
+                                    if (it.itemId == line.itemId) it.copy(quantity = newQuantity) else it
+                                }
+                            },
+                            onRemove = {
+                                lines = lines.filter { it.itemId != line.itemId }
+                            }
+                        )
+                    }
                 }
             }
 
-            if (lines.isEmpty()) {
-                Text(
-                    text = "Todavía no agregaste productos",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            lines.forEach { line ->
-                BudgetLineRow(
-                    line = line,
-                    onQuantityChange = { newQuantity ->
-                        lines = lines.map {
-                            if (it.itemId == line.itemId) it.copy(quantity = newQuantity) else it
-                        }
-                    },
-                    onRemove = {
-                        lines = lines.filter { it.itemId != line.itemId }
-                    }
-                )
-            }
-
-            HorizontalDivider()
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Total",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = formatPrice(total),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            Button(
-                onClick = {
+            BudgetFooter(
+                total = total,
+                enabled = isFormValid && !isSaving,
+                onSave = {
                     client?.let { selectedClient ->
                         isSaving = true
                         onSave(
@@ -173,14 +176,8 @@ fun BudgetFormScreen(
                             lines
                         )
                     }
-                },
-                enabled = isFormValid && !isSaving,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                Text("Guardar presupuesto")
-            }
+                }
+            )
         }
 
         if (isSaving) {
@@ -207,6 +204,46 @@ fun BudgetFormScreen(
     }
 }
 
+/** Pie fijo con el total y el botón de guardar. Siempre visible, incluso con el teclado abierto. */
+@Composable
+private fun BudgetFooter(
+    total: Long,
+    enabled: Boolean,
+    onSave: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 0.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        HorizontalDivider()
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Total",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = formatPrice(total),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Button(
+            onClick = onSave,
+            enabled = enabled,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Guardar presupuesto")
+        }
+    }
+}
+
 /** Una línea del presupuesto con cantidad editable, subtotal y botón para quitarla. */
 @Composable
 private fun BudgetLineRow(
@@ -214,6 +251,10 @@ private fun BudgetLineRow(
     onQuantityChange: (Int) -> Unit,
     onRemove: () -> Unit
 ) {
+    val detail = remember(line.unitPriceCents, line.quantity) {
+        "${formatPrice(line.unitPriceCents)} c/u · Subtotal ${formatPrice(line.subtotalCents)}"
+    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -226,7 +267,7 @@ private fun BudgetLineRow(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "${formatPrice(line.unitPriceCents)} c/u · Subtotal ${formatPrice(line.subtotalCents)}",
+                text = detail,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -266,22 +307,34 @@ private fun ProductPickerSheet(
     var query by remember { mutableStateOf("") }
     // id del producto -> cantidad elegida. Solo entran los marcados.
     var selection by remember { mutableStateOf(emptyMap<Int, Int>()) }
-    val visible = products.filter { it.name.contains(query, ignoreCase = true) }
-    val picked = products
-        .filter { selection.containsKey(it.id) }
-        .map {
-            BudgetLine(
-                itemId = it.id,
-                name = it.name,
-                unitPriceCents = it.unitPriceCents,
-                quantity = selection.getValue(it.id)
-            )
-        }
+    val visible = remember(products, query) {
+        products.filter { it.name.contains(query, ignoreCase = true) }
+    }
 
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    val picked = remember(products, selection) {
+        products
+            .filter { selection.containsKey(it.id) }
+            .map {
+                BudgetLine(
+                    itemId = it.id,
+                    name = it.name,
+                    unitPriceCents = it.unitPriceCents,
+                    quantity = selection.getValue(it.id)
+                )
+            }
+    }
+
+    // Abre la hoja a altura completa para que el botón tenga lugar cuando sube el teclado
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .imePadding()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -300,7 +353,7 @@ private fun ProductPickerSheet(
 
             Column(
                 modifier = Modifier
-                    .heightIn(max = 400.dp)
+                    .weight(1f, fill = false)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -380,6 +433,7 @@ private fun mergeLines(current: List<BudgetLine>, added: List<BudgetLine>): List
     }
     return result
 }
+
 // Datos de ejemplo para las vistas previas
 private val previewClients = listOf(
     sampleClient().copy(id = 1, name = "Juan Pérez"),

@@ -1,6 +1,5 @@
 package com.gastonnicora.presupuesto.ui.client
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import com.gastonnicora.presupuesto.database.DatabaseProvider
 import com.gastonnicora.presupuesto.model.Client
 import com.gastonnicora.presupuesto.storage.createDirectory
-import com.gastonnicora.presupuesto.storage.moveDirectory
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

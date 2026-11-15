@@ -1,6 +1,5 @@
 package com.gastonnicora.presupuesto.model
 
-import com.gastonnicora.presupuesto.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
@@ -52,7 +51,7 @@ data class CompanyData(
                 isPhoneValid() &&
                 isCuitValid() &&
                 isIibbValid() &&
-                isStartDateValid()&&
+                isStartDateValid() &&
                 isIvaCategoryValid()
 
     /** Muestra el CUIT con guiones: 30718956001 -> 30-71895600-1 */

@@ -3,6 +3,7 @@ package com.gastonnicora.presupuesto.database
 import android.content.Context
 import androidx.room3.Room
 import androidx.sqlite.driver.AndroidSQLiteDriver
+
 object DatabaseProvider {
     const val DB_NAME = "presupuesto.db"
 

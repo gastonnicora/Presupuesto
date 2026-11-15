@@ -42,7 +42,12 @@ fun ClientListScreen(
 private fun ClientListPreview() {
     PresupuestoTheme {
         ClientListScreen(
-            clients = List(5) { index -> sampleClient().copy(id = index, name = "Cliente ${index + 1}") },
+            clients = List(5) { index ->
+                sampleClient().copy(
+                    id = index,
+                    name = "Cliente ${index + 1}"
+                )
+            },
             onEdit = {},
             onDelete = {}
         )

@@ -13,7 +13,7 @@ import com.gastonnicora.presupuesto.model.Item
 @Database(
     entities = [Client::class, Item::class, Budget::class, BudgetItem::class],
     exportSchema = true,
-    version = 1
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun clientDao(): ClientDao
