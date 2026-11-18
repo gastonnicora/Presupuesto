@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -351,13 +349,11 @@ private fun ProductPickerSheet(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Column(
-                modifier = Modifier
-                    .weight(1f, fill = false)
-                    .verticalScroll(rememberScrollState()),
+            LazyColumn(
+                modifier = Modifier.weight(1f, fill = false),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                visible.forEach { product ->
+                items(visible, key = { it.id }) { product ->
                     val quantity = selection[product.id] ?: 0
                     Row(
                         modifier = Modifier.fillMaxWidth(),

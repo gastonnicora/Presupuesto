@@ -30,7 +30,7 @@ fun BudgetListScreen(
         items(budgets, key = { it.budgetId }) { budget ->
             ItemCard(
                 title = budget.clientName,
-                description = budget.date + "            " + formatPrice(budget.total),
+                description = "${budget.date} · ${formatPrice(budget.total)}",
                 onEdit = { onEdit(budget.budgetId) },
                 onDelete = { onDelete(budget.budgetId) }
             )

@@ -12,6 +12,7 @@ import com.gastonnicora.presupuesto.model.CompanyData
 import com.gastonnicora.presupuesto.model.IvaCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -51,6 +52,8 @@ class CompanyRepository(private val context: Context) {
     }
 
     suspend fun save(company: CompanyData) {
+        // Si el logo cambió, el archivo anterior ya no se usa y se borra
+        val anterior = companyData.first().logoPath
         context.companyDataStore.edit { prefs ->
             prefs[Keys.NAME] = company.name
             prefs[Keys.EMAIL] = company.email
@@ -61,6 +64,9 @@ class CompanyRepository(private val context: Context) {
             prefs[Keys.START_DATE] = company.startDate
             prefs[Keys.IVA_CATEGORY] = company.ivaCategory?.name ?: ""
             prefs[Keys.LOGO_PATH] = company.logoPath
+        }
+        if (anterior.isNotEmpty() && anterior != company.logoPath) {
+            withContext(Dispatchers.IO) { File(anterior).delete() }
         }
     }
 

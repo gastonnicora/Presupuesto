@@ -22,7 +22,7 @@ fun formatPrice(cents: Long): String {
 
 
 fun formatDate(millis: Long): String =
-    java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale("es", "AR"))
+    java.text.SimpleDateFormat("dd/MM/yyyy", LOCALE_AR)
         .format(java.util.Date(millis))
 
 
@@ -32,3 +32,6 @@ suspend fun loadLogo(path: String?): ByteArray? {
         runCatching { File(path).readBytes() }.getOrNull()
     }
 }
+
+/** Locale argentino para fechas. Se crea una sola vez. */
+val LOCALE_AR: java.util.Locale = java.util.Locale.Builder().setLanguage("es").setRegion("AR").build()

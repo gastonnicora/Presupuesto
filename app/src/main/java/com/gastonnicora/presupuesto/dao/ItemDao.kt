@@ -21,10 +21,6 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE id IN (:itemIds)")
     suspend fun loadAllByIds(itemIds: IntArray): List<Item>
 
-    // Pasar el patrón con comodines, por ejemplo "%alambre%"
-    @Query("SELECT * FROM items WHERE name LIKE :name ORDER BY name")
-    suspend fun searchByName(name: String): List<Item>
-
     @Insert
     suspend fun insertAll(vararg items: Item)
 

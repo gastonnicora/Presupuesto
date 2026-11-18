@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gastonnicora.presupuesto.model.Client
 import com.gastonnicora.presupuesto.model.IvaCategory
+import com.gastonnicora.presupuesto.model.isValidCuit
 import com.gastonnicora.presupuesto.model.sampleClient
 import com.gastonnicora.presupuesto.ui.components.EnumDropdown
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
@@ -85,9 +86,9 @@ fun ClientFormScreen(
             label = { Text("CUIT") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = cuit.length == 11,
+            isError = cuit.length == 11 && !isValidCuit(cuit),
             supportingText = {
-                if (cuit.length == 11) Text("CUIT inválido")
+                if (cuit.length == 11 && !isValidCuit(cuit)) Text("CUIT inválido")
             },
             modifier = Modifier.fillMaxWidth()
         )

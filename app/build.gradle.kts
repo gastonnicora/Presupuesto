@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
+
+// Credenciales de firma: se leen de keystore.properties (no se sube a git)
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val hasReleaseKey = keystoreProps.containsKey("storeFile")
 
 android {
     namespace = "com.gastonnicora.presupuesto"
@@ -20,14 +29,26 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            optimization {
-                enable = true
-                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
+    signingConfigs {
+        create("release") {
+            if (hasReleaseKey) {
+                storeFile = file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
             }
         }
     }
+
+    buildTypes {
+        release {
+            if (hasReleaseKey) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            isMinifyEnabled = false
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

@@ -36,7 +36,9 @@ fun ItemScreen(
 ) {
     var query by remember { mutableStateOf("") }
 
-    val filtered = items.filter { it.name.contains(query, ignoreCase = true) }
+    val filtered = remember(items, query) {
+        items.filter { it.name.contains(query, ignoreCase = true) }
+    }
 
     Box(modifier = modifier
         .fillMaxSize()

@@ -93,12 +93,9 @@ class BudgetActivity : ComponentActivity() {
                                 onClick = {
                                     lifecycleScope.launch {
                                         withContext(Dispatchers.IO) {
-                                            val bud = budgetDao.findById(budget)
-                                            deletePdf(
-                                                applicationContext,
-                                                "${bud!!.clientId}",
-                                                "$budget"
-                                            )
+                                            budgetDao.findById(budget)?.let { bud ->
+                                                deletePdf(applicationContext, bud.clientId, budget.toString())
+                                            }
                                             budgetDao.deleteById(budget)
                                         }
                                     }

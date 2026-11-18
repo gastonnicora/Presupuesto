@@ -23,8 +23,6 @@ import com.gastonnicora.presupuesto.dao.BudgetLine
 import com.gastonnicora.presupuesto.model.Budget
 import com.gastonnicora.presupuesto.model.Client
 import com.gastonnicora.presupuesto.model.CompanyData
-import com.gastonnicora.presupuesto.model.IvaCategory
-import com.gastonnicora.presupuesto.model.SalesCondition
 import com.gastonnicora.presupuesto.model.formatPrice
 
 
@@ -115,7 +113,7 @@ private fun ContainerScope.headerPdf(logo: ByteArray?, budget: Budget, company: 
                         text("Inicio Act:  ") { bold = true; fontSize = 10.sp }
                         text(company.startDate.ifBlank { "-" }) { fontSize = 10.sp }
                     }
-                    text(company.ivaCategory!!.label) { bold = true; fontSize = 12.sp }
+                    text(company.ivaCategory?.label ?: "-") { bold = true; fontSize = 12.sp }
                 }
                 divider(thickness = 1.dp, color = PdfColor.Black)
             }
@@ -240,59 +238,3 @@ private fun ContainerScope.total(total: String) {
 
     text("ORIGINAL") { align = TextAlign.End; fontSize = 8.sp; color = PdfColor.Gray }
 }
-
-private val ITEMS_DEMO = listOf(
-    BudgetLine(
-        itemId = 1,
-        name = "ESTO es  un producto que tiene una descricion muy larga. Tan larga que no se que poner",
-        unitPriceCents = 12219561L,
-        quantity = 8
-    ),
-    BudgetLine(
-        itemId = 33,
-        name = "TEJIDO 1,80 (10 M) CALIBRE 14, ROMBO 63",
-        unitPriceCents = 12219561L,
-        quantity = 8
-    ),
-    BudgetLine(
-        itemId = 249, name = "POSTES QUEBRACHO 3 LIVIANO", unitPriceCents = 9801000L, quantity = 13
-    ),
-    BudgetLine(
-        itemId = 10, name = "ALAMBRE 17/15 ACINDAR", unitPriceCents = 10299952L, quantity = 1
-    ),
-    BudgetLine(
-        itemId = 244,
-        name = "POSTES QUEBRACHO 2.4 MEDIANO PUNTAL",
-        unitPriceCents = 7018000L,
-        quantity = 4
-    ),
-    BudgetLine(
-        itemId = 250, name = "POSTES QUEBRACHO 3 MEDIANO", unitPriceCents = 11011000L, quantity = 4
-    ),
-    BudgetLine(itemId = 258, name = "CRUCEROS 1.2", unitPriceCents = 2579700L, quantity = 12),
-    BudgetLine(
-        itemId = 260, name = "CUÑAS 0.6 CUADRADOS", unitPriceCents = 1862400L, quantity = 4
-    ),
-    BudgetLine(
-        itemId = 175, name = "VARILLAS ROSCADAS 1/2", unitPriceCents = 352809L, quantity = 2
-    ),
-    BudgetLine(
-        itemId = 233, name = "TUERCA Y ARANDELA 1/2", unitPriceCents = 25043L, quantity = 8
-    ),
-)
-
-private val BUDGET_DEMO = Budget(20, "21/11/2026", SalesCondition.CASH, 30, 3000000)
-private val COMPANY_DEMO = CompanyData(
-    "EL VASQUITO",
-    "emaildeprueba@mail.com",
-    "Calle falsa 123, La Plata, BS.AS",
-    "(2345) 454545",
-    "27272727272",
-    "27272727272",
-    "21/11/2026",
-    IvaCategory.IVA_LIBERADO
-)
-
-private val CLIENT_DEMO = Client(
-    30, "Juan Perez", "Calle falsa (123)", IvaCategory.IVA_LIBERADO, "La Plata", "27272727272"
-)

@@ -31,7 +31,8 @@ data class CompanyData(
     /** CUIT: 11 dígitos con dígito verificador (algoritmo oficial de AFIP/ARCA). */
     fun isCuitValid(): Boolean = isValidCuit(cuit)
 
-    fun isIibbValid(): Boolean = iibb.length in 1..12 && iibb.all { it.isDigit() }
+    /** IIBB es opcional (el PDF muestra "-" si está vacío). Si se carga, son solo dígitos, hasta 12. */
+    fun isIibbValid(): Boolean = iibb.isEmpty() || (iibb.length <= 12 && iibb.all { it.isDigit() })
 
     /** Fecha de inicio de actividad en formato dd/MM/yyyy. */
     fun isStartDateValid(): Boolean {
@@ -65,7 +66,6 @@ data class CompanyData(
         private val EMAIL_PATTERN = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
         private val PHONE_PATTERN = Regex("^[+]?[0-9\\s\\-()]+$")
         private val DATE_PATTERN = Regex("^\\d{2}/\\d{2}/\\d{4}$")
-        private val CUIT_WEIGHTS = intArrayOf(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)
     }
 }
 

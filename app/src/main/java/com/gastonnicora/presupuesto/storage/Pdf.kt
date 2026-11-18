@@ -33,7 +33,7 @@ fun savePdf(context: Context, clientId: Any, fileName: String, bytes: ByteArray)
 }
 
 fun deletePdf(context: Context, clientId: Any, fileName: String): Boolean {
-    val carpeta = File(context.getExternalFilesDir(null), "Presupuestos/${clientId}")
+    val carpeta = File(presupuestosRaiz(context), "$clientId")
     val archivo = File(carpeta, "presupuesto_${fileName}.pdf")
 
     if (!archivo.exists()) return false
@@ -56,7 +56,7 @@ data class PdfEntry(
 )
 
 fun listAllPdfs(context: Context): List<PdfEntry> {
-    val raiz = File(context.getExternalFilesDir(null), "Presupuestos")
+    val raiz = presupuestosRaiz(context)
     return raiz.listFiles { f -> f.isDirectory }.orEmpty()
         .flatMap { carpeta ->
             carpeta.listFiles { f -> f.isFile && f.extension.equals("pdf", ignoreCase = true) }

@@ -35,7 +35,9 @@ fun ClientScreen(
 ) {
     var query by remember { mutableStateOf("") }
 
-    val filtered = clients.filter { it.name.contains(query, ignoreCase = true) }
+    val filtered = remember(clients, query) {
+        clients.filter { it.name.contains(query, ignoreCase = true) }
+    }
 
     Box(modifier = modifier
         .fillMaxSize()

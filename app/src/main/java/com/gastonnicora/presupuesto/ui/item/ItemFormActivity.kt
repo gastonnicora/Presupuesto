@@ -88,8 +88,9 @@ class ItemFormActivity : ComponentActivity() {
                                         } else {
                                             itemDao.insertAll(item)
                                         }
-                                        finish()
                                     }
+                                    // Ya de vuelta en el hilo principal
+                                    finish()
                                 }
                             },
                             modifier = Modifier.padding(innerPadding)

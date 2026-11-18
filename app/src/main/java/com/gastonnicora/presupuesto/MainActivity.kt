@@ -87,13 +87,11 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         // Corre al abrir la app y al volver desde CompanyActivity
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val loaded = companyRepository.companyData.first()
-                if (loaded.isValid()) {
-                    company = loaded
-                } else {
-                    startActivity(Intent(this@MainActivity, CompanyActivity::class.java))
-                }
+            val loaded = withContext(Dispatchers.IO) { companyRepository.companyData.first() }
+            if (loaded.isValid()) {
+                company = loaded
+            } else {
+                startActivity(Intent(this@MainActivity, CompanyActivity::class.java))
             }
         }
     }

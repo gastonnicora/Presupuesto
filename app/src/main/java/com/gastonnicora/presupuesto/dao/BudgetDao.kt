@@ -32,10 +32,6 @@ data class BudgetSummary(
 @Dao
 interface BudgetDao {
 
-    /** Presupuestos, del más reciente al más antiguo. */
-    @Query("SELECT * FROM budgets ORDER BY id DESC")
-    fun observeAll(): Flow<List<Budget>>
-
     @Query("SELECT * FROM budgets WHERE id = :id")
     suspend fun findById(id: Int): Budget?
 

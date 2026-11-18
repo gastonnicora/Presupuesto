@@ -82,13 +82,11 @@ class ClientFormActivity : ComponentActivity() {
                                             clientDao.update(client)
                                         } else {
                                             val id = clientDao.insert(client).toInt()
-                                            createDirectory(
-                                                context = applicationContext,
-                                                "$id"
-                                            )
+                                            createDirectory(applicationContext, "$id")
                                         }
-                                        finish()
                                     }
+                                    // Ya de vuelta en el hilo principal
+                                    finish()
                                 }
                             },
                             modifier = Modifier.padding(innerPadding)

@@ -46,6 +46,7 @@ import kotlinx.coroutines.withContext
 
 /** Alta y edición de presupuestos. Sin EXTRA_BUDGET_ID es alta; con id, es edición. */
 class BudgetFormActivity : ComponentActivity() {
+
     private val companyRepository by lazy { CompanyRepository(applicationContext) }
 
     companion object {
@@ -117,35 +118,32 @@ class BudgetFormActivity : ComponentActivity() {
                             initialLines = data.lines,
                             onSave = { budget, lines ->
                                 lifecycleScope.launch {
-
-                                    withContext(Dispatchers.IO) {
+                                    // Base de datos, generación y escritura del PDF fuera del hilo principal
+                                    val archivo = withContext(Dispatchers.IO) {
                                         val id = budgetDao.saveBudget(budget, lines, budgetId)
 
-                                        // En edición, borra el PDF del cliente original (puede ser distinto si cambió)
+                                        // En edición, borra el PDF anterior (el cliente pudo haber cambiado)
                                         data.budget?.let { original ->
                                             deletePdf(applicationContext, original.clientId, "$id")
                                         }
 
                                         // El cliente se lee al guardar porque puede haber cambiado
-                                        val client = clientDao.findById(budget.clientId)!!
-                                        val items = budgetDao.observeLines(id)
-                                        val bud = budget.copy(id = id)
+                                        val client = clientDao.findById(budget.clientId)
+                                            ?: error("No se encontró el cliente del presupuesto")
+
                                         val document = generatePDF(
                                             data.logo,
-                                            bud,
+                                            budget.copy(id = id),
                                             data.company,
                                             client,
-                                            items.first()
+                                            budgetDao.observeLines(id).first()
                                         )
-                                        val archivo = savePdf(
-                                            applicationContext,
-                                            client.id,
-                                            "$id",
-                                            document.toByteArray()
-                                        )
-                                        sharePdf(this@BudgetFormActivity, archivo)
-                                        finish()
+                                        savePdf(applicationContext, client.id, "$id", document.toByteArray())
                                     }
+
+                                    // De vuelta en el hilo principal: compartir y cerrar la pantalla
+                                    sharePdf(this@BudgetFormActivity, archivo)
+                                    finish()
                                 }
                             },
                             modifier = Modifier.padding(innerPadding)
@@ -164,7 +162,6 @@ class BudgetFormActivity : ComponentActivity() {
             }
         }
     }
-
 }
 
 private data class BudgetFormData(

@@ -45,11 +45,12 @@ import com.gastonnicora.presupuesto.storage.listAllPdfs
 import com.gastonnicora.presupuesto.storage.openPdf
 import com.gastonnicora.presupuesto.storage.sharePdf
 import com.gastonnicora.presupuesto.ui.theme.PresupuestoTheme
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
+import com.gastonnicora.presupuesto.model.LOCALE_AR
 
 class PdfListActivity : ComponentActivity() {
     private val clientDao by lazy { DatabaseProvider.get(applicationContext).clientDao() }
@@ -66,10 +67,9 @@ class PdfListActivity : ComponentActivity() {
 
                 fun recargar() {
                     lifecycleScope.launch {
-                        pdfs = listAllPdfs(applicationContext)
-                        // Ajusta `name` al campo real de Client
-                        clientNames = clientDao.observeActive().first()
-                            .associate { it.id.toString() to it.name }
+                        pdfs = withContext(Dispatchers.IO) { listAllPdfs(applicationContext) }
+                        // Incluye también clientes dados de baja, para que sus PDF sigan mostrando el nombre
+                        clientNames = clientDao.getAll().associate { it.id.toString() to it.name }
                     }
                 }
 
@@ -127,7 +127,7 @@ fun PdfListContent(
     }
 
     var aBorrar by remember { mutableStateOf<PdfEntry?>(null) }
-    val formato = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale("es", "AR")) }
+    val formato = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", LOCALE_AR) }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -154,7 +154,6 @@ fun PdfListContent(
                             text = clientNames[entry.clientId] ?: "Cliente ${entry.clientId}",
                             style = MaterialTheme.typography.titleMedium
                         )
-                        Text("")
                         Text(
                             text = formato.format(Date(entry.modified)),
                             style = MaterialTheme.typography.bodySmall

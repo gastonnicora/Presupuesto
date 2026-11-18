@@ -25,6 +25,10 @@ interface ClientDao {
     @Query("SELECT * FROM clients WHERE name LIKE :name AND active = 1 LIMIT 1")
     suspend fun findByName(name: String): Client?
 
+    /** Todos los clientes, activos o no. Sirve para resolver nombres en los PDF viejos. */
+    @Query("SELECT * FROM clients")
+    suspend fun getAll(): List<Client>
+
     @Insert
     suspend fun insert(client: Client): Long
 

@@ -68,7 +68,7 @@ fun ItemFormScreen(
             value = priceText,
             onValueChange = { input ->
                 // Solo dígitos, una coma y hasta dos decimales
-                if (input.matches(Regex("^\\d*(,\\d{0,2})?$"))) priceText = input
+                if (PRICE_INPUT.matches(input)) priceText = input
             },
             label = { Text("Precio unitario ($)") },
             singleLine = true,
@@ -125,3 +125,5 @@ private fun ItemFormPreview() {
         ItemFormScreen(initial = sampleItem(), onSave = {})
     }
 }
+
+private val PRICE_INPUT = Regex("^\\d*(,\\d{0,2})?$")

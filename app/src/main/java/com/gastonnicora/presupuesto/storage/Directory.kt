@@ -3,24 +3,13 @@ package com.gastonnicora.presupuesto.storage
 import android.content.Context
 import java.io.File
 
+/** Carpeta raíz de los PDF: Presupuestos/ dentro del almacenamiento externo de la app. */
+fun presupuestosRaiz(context: Context): File =
+    File(context.getExternalFilesDir(null), "Presupuestos")
+
+/** Crea (si hace falta) la subcarpeta de un cliente y la devuelve. */
 fun createDirectory(context: Context, path: String): File {
-    val carpeta = File(context.getExternalFilesDir(null), "Presupuestos/$path")
-    if (!carpeta.exists()) {
-        carpeta.mkdirs()
-    }
+    val carpeta = File(presupuestosRaiz(context), path)
+    if (!carpeta.exists()) carpeta.mkdirs()
     return carpeta
 }
-
-fun moveDirectory(origen: File, destino: File): Boolean {
-    if (!origen.exists()) return false
-
-    // Copia todo, incluyendo subcarpetas. Sobrescribe si ya existe.
-    val copiado = origen.copyRecursively(destino, overwrite = true)
-    if (!copiado) return false
-
-    // Solo borra el origen si la copia salió bien
-    return origen.deleteRecursively()
-}
-
-
-val PATH = "Presupuestos/"
